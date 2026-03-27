@@ -17,7 +17,7 @@ A modern, production-ready MERN stack boilerplate with TypeScript, Auth0 authent
 ## Project Structure
 
 ```
-mern-starter/
+.
 ├── client/                 # React frontend
 │   ├── src/
 │   │   ├── components/     # Reusable UI components
@@ -38,9 +38,11 @@ mern-starter/
 │   │   ├── config/         # Configuration files
 │   │   └── types/          # TypeScript type definitions
 │   └── scripts/
+├── docs/                   # Extra guides (e.g. Shopify auth)
 ├── .env.example            # Environment variables template
 ├── package.json            # Root package.json with scripts
-└── README.md
+├── README.md
+└── SETUP.md
 ```
 
 ## Prerequisites
@@ -60,7 +62,7 @@ mern-starter/
 ```bash
 # Clone the repository
 git clone <your-repo-url>
-cd mern-starter
+cd jdpmechanical   # or your clone folder name
 
 # Install all dependencies (root, client, and server)
 npm run install:all

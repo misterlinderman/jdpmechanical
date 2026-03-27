@@ -121,7 +121,7 @@ cp server/.env.example server/.env
    - Copy the connection string
 9. Add to `server/.env`:
    ```
-   MONGODB_URI=mongodb+srv://USERNAME:PASSWORD@cluster.mongodb.net/mern-starter?retryWrites=true&w=majority
+   MONGODB_URI=mongodb+srv://USERNAME:PASSWORD@cluster.mongodb.net/jdpmechanical?retryWrites=true&w=majority
    ```
    Replace USERNAME and PASSWORD with your database user credentials.
 
