@@ -5,6 +5,44 @@ interface ColumnMap {
   [header: string]: string | null;
 }
 
+/** Headers must match labels recognized by the server import parser (see importService mapHeaderToField). */
+const IMPORT_TEMPLATE_HEADERS = [
+  'Equipment #',
+  'Floor',
+  'Reference Document',
+  'Submittal GPM',
+  'Design GPM',
+  'Line size',
+  'CTL size',
+  'Supply Side (flow)',
+] as const;
+
+function escapeCsvCell(v: string): string {
+  if (/[",\n\r]/.test(v)) {
+    return `"${v.replace(/"/g, '""')}"`;
+  }
+  return v;
+}
+
+function downloadUnitsImportTemplate(): void {
+  const exampleRows: string[][] = [
+    ['FPB-101', '3', 'SUB-2025-A', '45', '42', '6"', '4"', 'Left'],
+    ['FPB-102', '3', 'SUB-2025-A', '38', '38', '4"', '4"', 'Right'],
+  ];
+  const headerLine = IMPORT_TEMPLATE_HEADERS.join(',');
+  const dataLines = exampleRows.map((row) => row.map(escapeCsvCell).join(','));
+  const csv = `\ufeff${[headerLine, ...dataLines].join('\n')}\n`;
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'fpb-units-import-template.csv';
+  a.rel = 'noopener';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(a.href);
+}
+
 export default function AdminImport(): JSX.Element {
   const [file, setFile] = useState<File | null>(null);
   const [columnMap, setColumnMap] = useState<ColumnMap | null>(null);
@@ -114,6 +152,16 @@ export default function AdminImport(): JSX.Element {
         <div>
           <h1 className="text-2xl font-bold">Import units</h1>
           <p className="text-sm text-[var(--muted)] mt-1">CSV or Excel · column mapping on the right</p>
+          <p className="text-sm text-[var(--muted)] mt-2">
+            <button
+              type="button"
+              className="text-[var(--gold)] hover:underline font-medium"
+              onClick={downloadUnitsImportTemplate}
+            >
+              Download CSV template
+            </button>
+            <span className="text-[var(--muted)]"> — required columns and sample rows you can replace</span>
+          </p>
         </div>
 
         <div
