@@ -57,13 +57,15 @@ If `event.authorization.roles` is empty in Actions, load roles with the **Manage
    - Type: **Machine to Machine**  
    - Authorize it for the **Auth0 Management API**.
 
-2. **Grant** at least these scopes (names may vary slightly by dashboard):
+2. **Grant** at least these scopes (names vary by dashboard / tenant; use the permission search in **Applications → [M2M] → APIs → Auth0 Management API**):
 
-   - `read:users`
-   - `read:roles`  
-   (Required to call `GET /api/v2/users/{id}/roles`.)
-   - `assign:roles`  
-   (Required if you use the in-app **Admin → Users & roles** screen to assign or remove the five app roles via `POST`/`DELETE` `/api/v2/users/{id}/roles`.)
+   - `read:users` — list users (clear any filter and search `users` if you do not see it).
+   - `read:roles` — list roles and read a user’s roles (`GET /api/v2/users/{id}/roles`).
+   - **Assign / remove roles on users** — many tenants no longer show a single `assign:roles`. Enable the scopes your dashboard offers that correspond to **`POST` and `DELETE` `/api/v2/users/{id}/roles`**, commonly:
+     - `create:role_members` and `delete:role_members`, **or**
+     - `update:roles` (some tenants bundle membership changes here), **or**
+     - legacy `assign:roles` if it still appears.  
+   If saving roles in **Users & roles** returns **403**, open [Management API → Users](https://auth0.com/docs/api/management/v2#!/Users/post_user_roles) in the API explorer for your tenant and match the **required scope** shown there.
 
 3. Note the M2M **Client ID** and **Client Secret** and your Auth0 **tenant domain** (e.g. `dev-xxxx.us.auth0.com`).
 
@@ -74,7 +76,7 @@ The SPA route **`/admin/users`** (admins only) calls the backend **`/api/admin/a
 - `AUTH0_MANAGEMENT_CLIENT_ID` — M2M application Client ID  
 - `AUTH0_MANAGEMENT_CLIENT_SECRET` — M2M Client Secret  
 
-`AUTH0_DOMAIN` must match the tenant used by the SPA. You can reuse the same M2M app you use in Actions (if you add `assign:roles`), or create a dedicated M2M app with `read:users`, `read:roles`, and `assign:roles` only.
+`AUTH0_DOMAIN` must match the tenant used by the SPA. You can reuse the same M2M app you use in Actions (add the role-member scopes above), or create a dedicated M2M app with `read:users`, `read:roles`, plus the assign/remove scopes your tenant lists for user–role endpoints.
 
 4. In each Action that uses the Management API, add **Secrets** (Auth0 Action editor → **Secrets**):
 
