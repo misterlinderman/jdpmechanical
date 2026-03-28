@@ -24,12 +24,19 @@ const app = express();
 const httpServer = createServer(app);
 const PORT = process.env.PORT || 3001;
 
+/** Browser Origin header has no trailing slash; CLIENT_URL must match exactly for CORS. */
+function corsAllowedOrigin(): string | string[] | boolean {
+  if (process.env.NODE_ENV !== 'production') {
+    return ['http://localhost:5173', 'http://127.0.0.1:5173'];
+  }
+  const raw = process.env.CLIENT_URL?.trim();
+  if (!raw) return true;
+  return raw.replace(/\/$/, '');
+}
+
 const io = new SocketIOServer(httpServer, {
   cors: {
-    origin:
-      process.env.NODE_ENV === 'production'
-        ? process.env.CLIENT_URL || true
-        : ['http://localhost:5173', 'http://127.0.0.1:5173'],
+    origin: corsAllowedOrigin(),
     methods: ['GET', 'POST'],
   },
 });
@@ -40,10 +47,7 @@ app.set('io', io);
 app.use(helmet());
 app.use(
   cors({
-    origin:
-      process.env.NODE_ENV === 'production'
-        ? process.env.CLIENT_URL
-        : ['http://localhost:5173', 'http://127.0.0.1:5173'],
+    origin: corsAllowedOrigin(),
     credentials: true,
   })
 );
