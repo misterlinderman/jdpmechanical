@@ -109,8 +109,10 @@ PDF download:
 
 | Environment | Frontend | API | Database |
 |-------------|----------|-----|----------|
-| Development | localhost:5173 | localhost:5000 | Atlas M0 (free) |
-| Production | Vercel (CDN) | Railway (Dockerized) | Atlas M10+ |
+| Development | localhost:5173 | localhost:**3001** (default `PORT` in `server/.env`) | Atlas M0 (free) |
+| Production | Vercel (CDN) | Railway (Dockerfile; image defaults **PORT=5000**) | Atlas M10+ |
+
+Match `VITE_API_URL` and Auth0 callback URLs to whichever host/port the API uses in that environment.
 
 ---
 
@@ -123,7 +125,7 @@ PDF download:
   "multer": "multipart file upload handling",
   "xlsx": "CSV + Excel parsing",
   "puppeteer": "headless Chrome for PDF rendering",
-  "aws-sdk": "S3 upload for QR images",
+  "@aws-sdk/client-s3": "S3 upload for QR images",
   "socket.io": "real-time dashboard updates",
   "express-oauth2-jwt-bearer": "Auth0 JWT validation"
 }

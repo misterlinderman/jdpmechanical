@@ -1,8 +1,10 @@
-# MERN Starter Setup Instructions
+# FPB Tracker — local setup
 
-## For Cursor IDE + Claude Opus 4.5
+Step-by-step environment setup for **JDP Mechanical FPB Tracker** (MERN + Auth0 + MongoDB). For architecture and API detail see [README.md](README.md) and [docs/](docs/).
 
-Follow these steps to set up your development environment and connect with GitHub.
+## Cursor / AI assistants
+
+The repo includes [`.cursorrules`](.cursorrules) and [docs/CURSOR_CONTEXT.md](docs/CURSOR_CONTEXT.md). Follow these steps to run the app locally (and optionally connect GitHub).
 
 ---
 
@@ -84,12 +86,13 @@ git push -u origin main
 
 ## Step 4: Install Dependencies
 
+From the **repository root** (folder that contains `client/`, `server/`, and root `package.json`):
+
 ```bash
-# Install all dependencies (root, client, and server)
 npm run install:all
 ```
 
-This runs `npm install` in the root, client, and server directories.
+This runs `npm install` in the root, client, and server directories. Alternatively: `npm install` in each folder separately.
 
 ---
 
@@ -266,12 +269,13 @@ Check the API call and auth token handling.
 | Command | Description |
 |---------|-------------|
 | `npm run dev` | Start development (client + server) |
-| `npm run dev:client` | Start only frontend |
-| `npm run dev:server` | Start only backend |
-| `npm run build` | Build for production |
+| `npm run dev:client` | Start only frontend (http://localhost:5173) |
+| `npm run dev:server` | Start only backend (default http://localhost:3001) |
+| `npm run build` | Build client and server for production |
 | `npm run lint` | Run ESLint |
 | `npm run format` | Format code with Prettier |
 | `npm run install:all` | Install all dependencies |
+| `npm run seed:demo` / `npm run seed:purge-demo` | Demo seed scripts (see server; optional env) |
 
 ---
 

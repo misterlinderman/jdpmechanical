@@ -87,7 +87,14 @@ Role → permitted action mapping:
 
 ---
 
+## Ports (do not assume 5000 locally)
+
+- **Local API default:** `http://localhost:3001` (`PORT` in `server/.env`).
+- **Dockerfile / some hosts:** API may listen on **5000** inside the container — set `VITE_API_URL` and Auth0 URLs accordingly.
+
 ## What to read for full context
 
 - `docs/PROJECT_OVERVIEW.md` — client background, problem statement, goals, user roles
 - `docs/TECHNICAL_SPEC.md` — full architecture, data models, API routes, infrastructure, build phases
+- `docs/VERSIONING.md` — version alignment, ports, build outputs
+- `docs/AUTH0_ROLES_SETUP.md` — roles in the access token and Auth0 dashboard steps

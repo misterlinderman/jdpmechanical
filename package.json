@@ -1,7 +1,7 @@
 {
-  "name": "mern-starter",
+  "name": "jdp-fpb-tracker",
   "version": "1.0.0",
-  "description": "Modern MERN stack starter with TypeScript, Auth0, and Tailwind CSS",
+  "description": "JDP Mechanical FPB Tracker — MERN app with Auth0, QR/PDF, and real-time dashboard",
   "private": true,
   "scripts": {
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",

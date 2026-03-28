@@ -54,8 +54,11 @@ The current output looks like context/screenshots/bugs/2024-01-15_scan-layout-br
 | Content | Location |
 |---------|----------|
 | Project requirements + goals | `docs/PROJECT_OVERVIEW.md` |
-| Architecture + data models | `docs/TECHNICAL_SPEC.md` |
+| Architecture + data models | `docs/TECHNICAL_SPEC.md`, `docs/ARCHITECTURE.md` |
+| Versioning, ports, releases | `docs/VERSIONING.md` |
+| Auth0 roles in tokens | `docs/AUTH0_ROLES_SETUP.md` |
 | Cursor AI rules + conventions | `.cursorrules` (root) |
+| Short AI context | `docs/CURSOR_CONTEXT.md` |
 | Interactive mockup HTML | `fpb-tracker-mockups.html` (root) |
 | Build phase prompts | `docs/BUILD_PLAN.md` |
 | Screenshots + visual context | `context/screenshots/` (here) |

@@ -142,19 +142,26 @@ The scan route validates that the worker's role maps to a permitted action and t
 |--------|------|------|-------------|
 | GET | `/api/export/csv` | admin, pm | Export current unit status table as CSV |
 
+### Events (activity)
+| Method | Path | Role | Description |
+|--------|------|------|-------------|
+| GET | `/api/events/recent` | admin, pm | Recent scan events (short list) |
+| GET | `/api/events` | admin | Paginated activity log (`limit`, `page` query params) |
+
 ---
 
 ## Frontend Pages
 
 | Route | Component | Access | Description |
 |-------|-----------|--------|-------------|
-| `/` | `Dashboard` | all | Redirect to role-appropriate view |
+| `/` | `Home` | all | Login CTA; redirects **admin** → `/admin`, **pm** → `/dashboard`; field roles see scan instructions |
+| `/profile` | `Profile` | authenticated | User profile (template) |
 | `/admin` | `AdminDashboard` | admin | Overview + quick actions |
 | `/admin/import` | `AdminImport` | admin | Drag-and-drop CSV/Excel uploader with column mapping |
-| `/admin/qr` | `QRManager` | admin | Batch QR generation + PDF sticker download |
-| `/dashboard` | `LiveDashboard` | all | Filterable live status table |
-| `/scan/:unitId` | `ScanHandler` | fabricator, driver, installer | Mobile-optimised scan action page |
-| `/print` | `StickerPrint` | admin | Avery 5160 print preview + download trigger |
+| `/admin/qr` | `QRManager` | admin | Batch QR generation + Avery PDF download via API |
+| `/admin/activity` | `ActivityLog` | admin | Full activity log |
+| `/dashboard` | `LiveDashboard` | admin, pm | Filterable live status table |
+| `/scan/:unitId` | `ScanHandler` | fabricator, driver, installer (via `ProtectedRoute`) | Mobile-optimised scan action page |
 
 ---
 
@@ -181,9 +188,9 @@ The scan route validates that the worker's role maps to a permitted action and t
 ### Railway (API)
 - Deploy via **Dockerfile** (required for Puppeteer/Chromium support)
 - Railway's Node.js auto-detect buildpack does not include a Chrome binary
-- Base image: `node:20-slim` + Chromium install in Dockerfile
+- Base image: `node:20-bookworm-slim` + Chromium install in Dockerfile (default `PORT=5000` in image)
 - Alternative: `@sparticuz/chromium` npm package (avoids Dockerfile, faster to ship)
-- Environment variables: `MONGODB_URI`, `AUTH0_DOMAIN`, `AUTH0_AUDIENCE`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `S3_BUCKET_NAME`
+- Environment variables: `MONGODB_URI`, `AUTH0_DOMAIN`, `AUTH0_AUDIENCE`, `CLIENT_URL`, `APP_DOMAIN`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_REGION`, `S3_BUCKET_NAME`, `S3_PUBLIC_URL_BASE` (optional CDN/base URL for QR objects)
 
 ### MongoDB Atlas
 - Free tier sufficient for development
@@ -234,19 +241,9 @@ fpb-tracker/
 
 ---
 
-## Third-Party Packages to Add
+## Third-party packages (current stack)
 
-```bash
-# Server
-npm install qrcode @types/qrcode
-npm install multer @types/multer xlsx
-npm install puppeteer           # or @sparticuz/chromium for Railway
-npm install aws-sdk             # S3 upload
-npm install socket.io           # optional: real-time dashboard updates
-
-# Client
-npm install socket.io-client    # optional: if using real-time
-```
+Server dependencies already include: `qrcode`, `multer`, `xlsx`, `puppeteer`, `@aws-sdk/client-s3`, `socket.io`, `express-oauth2-jwt-bearer`, `mongoose`, etc. Client includes `socket.io-client` and `@auth0/auth0-react`. See root `npm run install:all` and each package’s `package.json` for exact versions.
 
 ---
 

@@ -1,259 +1,128 @@
-# MERN Stack Starter Template
+# FPB Tracker
 
-A modern, production-ready MERN stack boilerplate with TypeScript, Auth0 authentication, and Tailwind CSS.
+**JDP Mechanical — Fan Pipe Box assembly tracking**
 
-## Tech Stack
+Web app for tracking ~700 FPB assemblies through **Fabrication → Delivery → Installation**. Field staff scan QR stickers on their phone; admins import data, generate QRs, and download Avery sticker PDFs; PMs use a live dashboard. Built on a MERN stack (Vite + React, Express, MongoDB, Auth0).
 
-| Layer | Technology |
-|-------|------------|
-| Frontend | Vite + React 18 + TypeScript |
-| Styling | Tailwind CSS |
-| Routing | React Router v6 |
-| Backend | Express.js + TypeScript |
-| Database | MongoDB + Mongoose |
-| Authentication | Auth0 (swappable for Shopify OAuth) |
-| Dev Tools | ESLint, Prettier, Nodemon, Concurrently |
-
-## Project Structure
-
-```
-.
-├── client/                 # React frontend
-│   ├── src/
-│   │   ├── components/     # Reusable UI components
-│   │   ├── pages/          # Route-level components
-│   │   ├── hooks/          # Custom React hooks
-│   │   ├── services/       # API calls and external services
-│   │   ├── context/        # React context providers
-│   │   ├── styles/         # Global styles
-│   │   └── types/          # TypeScript type definitions
-│   └── public/
-├── server/                 # Express backend
-│   ├── src/
-│   │   ├── controllers/    # Route handlers
-│   │   ├── middleware/     # Express middleware
-│   │   ├── models/         # Mongoose schemas
-│   │   ├── routes/         # API route definitions
-│   │   ├── services/       # Business logic
-│   │   ├── config/         # Configuration files
-│   │   └── types/          # TypeScript type definitions
-│   └── scripts/
-├── docs/                   # Extra guides (e.g. Shopify auth)
-├── .env.example            # Environment variables template
-├── package.json            # Root package.json with scripts
-├── README.md
-└── SETUP.md
-```
-
-## Prerequisites
-
-- Node.js 18+ (recommend using nvm)
-- MongoDB Atlas account (or local MongoDB)
-- Auth0 account (free tier works)
-- Git installed
-- Cursor IDE
+**Build status (verified):** `npm run build` runs clean — client outputs to `client/dist`, server to `server/dist`.
 
 ---
 
-## Quick Start
+## Documentation map
 
-### 1. Clone and Install
+| Document | Purpose |
+|----------|---------|
+| [docs/PROJECT_OVERVIEW.md](docs/PROJECT_OVERVIEW.md) | Client context, goals, roles, workflows |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | System diagram, flows, collections, real-time |
+| [docs/TECHNICAL_SPEC.md](docs/TECHNICAL_SPEC.md) | Data models, API tables, infrastructure |
+| [docs/CURSOR_CONTEXT.md](docs/CURSOR_CONTEXT.md) | Short context for AI assistants |
+| [docs/VERSIONING.md](docs/VERSIONING.md) | Version policy, ports, release notes |
+| [docs/AUTH0_ROLES_SETUP.md](docs/AUTH0_ROLES_SETUP.md) | Auth0 RBAC and roles in tokens |
+| [docs/BUILD_PLAN.md](docs/BUILD_PLAN.md) | Phased build guide |
+| [docs/SHOPIFY_AUTH.md](docs/SHOPIFY_AUTH.md) | Optional Shopify auth swap (template) |
+| [SETUP.md](SETUP.md) | Step-by-step local setup |
+| [context/README.md](context/README.md) | Screenshots and visual context for builds |
+
+Root [`.cursorrules`](.cursorrules) encodes stack conventions for Cursor.
+
+---
+
+## Quick start
+
+**Prerequisites:** Node.js 18+ (Dockerfile uses Node 20 for production API), MongoDB (Atlas or local), Auth0 tenant.
 
 ```bash
-# Clone the repository
-git clone <your-repo-url>
-cd jdpmechanical   # or your clone folder name
+cd "JDP Mechanical"   # your clone path
 
-# Install all dependencies (root, client, and server)
+# Install root + client + server
 npm run install:all
-```
 
-### 2. Environment Setup
-
-Copy the example environment files:
-
-```bash
 cp .env.example .env
 cp client/.env.example client/.env
 cp server/.env.example server/.env
-```
+# Fill MongoDB, Auth0, and (for QR in non-dev) AWS — see Environment variables
 
-### 3. Configure Services
-
-#### MongoDB Atlas Setup
-
-1. Go to [MongoDB Atlas](https://www.mongodb.com/atlas)
-2. Create a free cluster
-3. Create a database user (Database Access → Add New Database User)
-4. Whitelist your IP (Network Access → Add IP Address → Allow Access from Anywhere for dev)
-5. Get connection string (Connect → Connect your application)
-6. Add to `server/.env`:
-   ```
-   MONGODB_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<dbname>?retryWrites=true&w=majority
-   ```
-
-#### Auth0 Setup
-
-1. Go to [Auth0](https://auth0.com) and create a free account
-2. Create a new Application (Applications → Create Application → Single Page Application)
-3. Configure Allowed Callback URLs: `http://localhost:5173`
-4. Configure Allowed Logout URLs: `http://localhost:5173`
-5. Configure Allowed Web Origins: `http://localhost:5173`
-6. Create an API (Applications → APIs → Create API)
-   - Name: `MERN Starter API`
-   - Identifier: `http://localhost:3001/api` (this becomes your audience)
-7. Add credentials to your `.env` files (see Environment Variables section)
-
-### 4. Run the Application
-
-```bash
-# Development mode (runs both client and server)
 npm run dev
-
-# Or run separately:
-npm run dev:client    # Frontend on http://localhost:5173
-npm run dev:server    # Backend on http://localhost:3001
 ```
+
+- **Frontend:** http://localhost:5173  
+- **API:** http://localhost:3001 (`PORT` in `server/.env`; default **3001** locally)
+
+The [Dockerfile](Dockerfile) used for Railway sets `PORT=5000` inside the container; configure `VITE_API_URL` and Auth0 URLs to match your deployed API URL.
 
 ---
 
-## Environment Variables
-
-### Root `.env`
-```env
-NODE_ENV=development
-```
-
-### Client `.env`
-```env
-VITE_API_URL=http://localhost:3001/api
-VITE_AUTH0_DOMAIN=your-tenant.auth0.com
-VITE_AUTH0_CLIENT_ID=your-client-id
-VITE_AUTH0_AUDIENCE=http://localhost:3001/api
-```
-
-### Server `.env`
-```env
-PORT=3001
-NODE_ENV=development
-MONGODB_URI=mongodb+srv://...
-AUTH0_DOMAIN=your-tenant.auth0.com
-AUTH0_AUDIENCE=http://localhost:3001/api
-JWT_SECRET=your-fallback-secret-for-dev
-```
-
----
-
-## Available Scripts
+## Scripts (root `package.json`)
 
 | Command | Description |
 |---------|-------------|
-| `npm run dev` | Start both client and server in development |
-| `npm run dev:client` | Start only the frontend |
-| `npm run dev:server` | Start only the backend |
-| `npm run build` | Build both client and server |
-| `npm run install:all` | Install dependencies for root, client, and server |
-| `npm run lint` | Run ESLint on both projects |
-| `npm run format` | Run Prettier on both projects |
+| `npm run dev` | Client + server (concurrently) |
+| `npm run dev:client` / `npm run dev:server` | One side only |
+| `npm run build` | Production build: client then server |
+| `npm start` | Run compiled server (`server/dist`) |
+| `npm run lint` | ESLint in client and server |
+| `npm run format` | Prettier |
+| `npm run seed:demo` / `npm run seed:purge-demo` | Demo data (see server scripts; requires env) |
 
 ---
 
-## API Endpoints
+## Project layout
 
-### Public Routes
-- `GET /api/health` - Health check
-
-### Protected Routes (require Auth0 token)
-- `GET /api/users/me` - Get current user profile
-- `PUT /api/users/me` - Update current user profile
-- `GET /api/items` - Get all items for user
-- `POST /api/items` - Create new item
-- `PUT /api/items/:id` - Update item
-- `DELETE /api/items/:id` - Delete item
+```
+.
+├── client/                 # Vite + React 18 + TypeScript + Tailwind
+│   └── src/
+│       ├── pages/          # Home, Admin*, QRManager, LiveDashboard, ScanHandler, ActivityLog, Profile
+│       ├── components/     # Layout, ProtectedRoute, RoleRoute, …
+│       ├── hooks/          # useApiAuth, useRealtimeUnits, useSessionRoles, …
+│       └── services/       # api.ts (axios + Auth0 token)
+├── server/                 # Express + TypeScript
+│   └── src/
+│       ├── routes/         # health, users, items (template), units, scan, qr, export, events
+│       ├── models/         # Mongoose schemas
+│       ├── middleware/     # Auth0 JWT + roles
+│       └── services/       # qr, pdf, import, …
+├── docs/                   # Architecture and product docs
+├── context/                # AI / screenshot context
+├── Dockerfile              # API image (Chromium for Puppeteer PDFs)
+└── fpb-tracker-mockups.html
+```
 
 ---
 
-## Authentication Flow
+## API surface (summary)
 
-1. User clicks "Login" → Redirected to Auth0
-2. Auth0 authenticates → Returns to app with token
-3. Frontend stores token and includes in API requests
-4. Backend validates token with Auth0
-5. Protected routes accessible
+All JSON routes are under `/api`. Protected routes expect an Auth0 bearer token (see `server/src/middleware/auth.ts`).
 
-### Swapping for Shopify Auth
+- **Health:** `GET /api/health`
+- **Users (template):** `GET|PUT /api/users/me`
+- **Items (template):** CRUD `/api/items`
+- **Units:** list/create/update/delete, import, `GET /api/units/:id` — see [TECHNICAL_SPEC.md](docs/TECHNICAL_SPEC.md)
+- **Scan:** `POST /api/scan/:unitId` (fabricator / driver / installer)
+- **QR:** `POST /api/qr/generate`, `GET /api/qr/sheet` (admin)
+- **Export:** `GET /api/export/csv` (admin, pm)
+- **Events / activity:** `GET /api/events/recent` (admin, pm); `GET /api/events` (admin, paginated log)
 
-For Shopify embedded apps, replace the Auth0 provider with Shopify App Bridge:
+---
 
-1. Install `@shopify/app-bridge-react`
-2. Replace `Auth0Provider` with `AppBridgeProvider`
-3. Use Shopify session tokens instead of Auth0 JWT
-4. See `docs/SHOPIFY_AUTH.md` for detailed instructions
+## Environment variables
+
+**Client (`client/.env`):** `VITE_API_URL`, `VITE_AUTH0_DOMAIN`, `VITE_AUTH0_CLIENT_ID`, `VITE_AUTH0_AUDIENCE`
+
+**Server (`server/.env`):** `PORT`, `MONGODB_URI`, `AUTH0_DOMAIN`, `AUTH0_AUDIENCE`, `CLIENT_URL` (production CORS), optional **AWS** (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_REGION`, `S3_BUCKET_NAME`, `S3_PUBLIC_URL_BASE`), `APP_DOMAIN` (QR link base in production). See `server/.env.example`.
+
+---
+
+## Roles (Auth0 RBAC)
+
+`admin` | `fabricator` | `driver` | `installer` | `pm` — enforced in JWT and `RoleRoute` / `requireRole`. Setup: [docs/AUTH0_ROLES_SETUP.md](docs/AUTH0_ROLES_SETUP.md).
 
 ---
 
 ## Deployment
 
-### Frontend (Vercel/Netlify)
-```bash
-cd client
-npm run build
-# Deploy dist/ folder
-```
-
-### Backend (Railway/Render/Fly.io)
-```bash
-cd server
-npm run build
-# Deploy with start command: npm start
-```
-
-### Environment Variables for Production
-- Update all URLs to production domains
-- Set `NODE_ENV=production`
-- Use production MongoDB connection string
-- Configure Auth0 for production URLs
-
----
-
-## Cursor IDE Tips
-
-### Recommended Extensions
-- ESLint
-- Prettier
-- Tailwind CSS IntelliSense
-- TypeScript Vue Plugin (Volar) - for better TS support
-
-### Cursor AI Prompts
-
-Use these prompts with Cursor's AI to extend the template:
-
-**Add a new feature:**
-> "Add a new protected route /api/posts with CRUD operations following the existing patterns in controllers and routes"
-
-**Add a new page:**
-> "Create a new Dashboard page component with a sidebar layout using Tailwind, following the existing page patterns"
-
-**Database model:**
-> "Create a new Mongoose model for Comments with author reference to User, following the existing model patterns"
-
----
-
-## Troubleshooting
-
-### MongoDB Connection Issues
-- Ensure IP is whitelisted in Atlas
-- Check username/password in connection string
-- Verify cluster is active
-
-### Auth0 Issues
-- Verify callback URLs match exactly
-- Check domain doesn't include `https://`
-- Ensure audience matches API identifier
-
-### Port Conflicts
-- Change ports in respective `.env` files
-- Update CORS and callback URLs accordingly
+- **Frontend:** build `client` (`npm run build` in `client/`), deploy static `dist/` (e.g. Vercel). Set all `VITE_*` to production values.
+- **API:** build server, run `node dist/index.js`. Prefer the repo **Dockerfile** on Railway (or similar) so Puppeteer has Chromium.
 
 ---
 

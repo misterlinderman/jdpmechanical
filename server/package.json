@@ -1,7 +1,7 @@
 {
-  "name": "mern-starter-server",
+  "name": "jdp-fpb-tracker-server",
   "version": "1.0.0",
-  "description": "Express API server with TypeScript and MongoDB",
+  "description": "FPB Tracker API — Express, TypeScript, MongoDB, Auth0",
   "main": "dist/index.js",
   "scripts": {
     "dev": "nodemon",

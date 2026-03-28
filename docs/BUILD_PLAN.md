@@ -23,29 +23,31 @@ ls
 
 Before Phase 1, collect and set the following:
 
-**client/.env**
+**client/.env** (match your Auth0 API identifier; default local stack uses port **3001**)
 ```
-VITE_API_URL=http://localhost:5000
+VITE_API_URL=http://localhost:3001/api
 VITE_AUTH0_DOMAIN=your-tenant.auth0.com
 VITE_AUTH0_CLIENT_ID=your-client-id
-VITE_AUTH0_AUDIENCE=https://fpb-tracker-api
+VITE_AUTH0_AUDIENCE=http://localhost:3001/api
 ```
 
 **server/.env**
 ```
 MONGODB_URI=mongodb+srv://...
 AUTH0_DOMAIN=your-tenant.auth0.com
-AUTH0_AUDIENCE=https://fpb-tracker-api
+AUTH0_AUDIENCE=http://localhost:3001/api
 AWS_ACCESS_KEY_ID=
 AWS_SECRET_ACCESS_KEY=
 S3_BUCKET_NAME=fpb-tracker-qr
-PORT=5000
+PORT=3001
 ```
+
+Use the **Dockerfile** defaults (`PORT=5000`) only when running that image; point `VITE_API_URL` at the deployed API URL in production.
 
 ### Auth0 Setup (do this first)
 
 1. Create an Auth0 Application (Single Page Application) for the frontend
-2. Create an Auth0 API resource with audience `https://fpb-tracker-api`
+2. Create an Auth0 API resource; set its identifier (audience) to match `VITE_AUTH0_AUDIENCE` / `AUTH0_AUDIENCE` (e.g. `http://localhost:3001/api` for local dev)
 3. Create roles in Auth0: `admin`, `fabricator`, `driver`, `installer`, `pm`
 4. Enable RBAC in the API settings so roles appear in the JWT
 5. Create one test user per role for development
