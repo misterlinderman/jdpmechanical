@@ -19,6 +19,7 @@ import scanRoutes from './routes/scan';
 import qrRoutes from './routes/qr';
 import exportRoutes from './routes/export';
 import eventRoutes from './routes/events';
+import auth0AdminRoutes from './routes/auth0Admin';
 
 const app = express();
 if (process.env.NODE_ENV === 'production') {
@@ -67,6 +68,7 @@ app.use('/api/scan', scanRoutes);
 app.use('/api/qr', qrRoutes);
 app.use('/api/export', exportRoutes);
 app.use('/api/events', eventRoutes);
+app.use('/api/admin/auth0', auth0AdminRoutes);
 
 // Error handling
 app.use(notFoundHandler);

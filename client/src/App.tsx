@@ -13,6 +13,7 @@ import QRManager from './pages/QRManager';
 import LiveDashboard from './pages/LiveDashboard';
 import ScanHandler from './pages/ScanHandler';
 import ActivityLog from './pages/ActivityLog';
+import AdminAuth0Users from './pages/AdminAuth0Users';
 
 function App(): JSX.Element {
   const { isLoading } = useAuth0();
@@ -76,6 +77,14 @@ function App(): JSX.Element {
                 element={
                   <RoleRoute roles={['admin']}>
                     <ActivityLog />
+                  </RoleRoute>
+                }
+              />
+              <Route
+                path="/admin/users"
+                element={
+                  <RoleRoute roles={['admin']}>
+                    <AdminAuth0Users />
                   </RoleRoute>
                 }
               />

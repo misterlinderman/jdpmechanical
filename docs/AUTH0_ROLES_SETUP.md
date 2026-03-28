@@ -62,8 +62,19 @@ If `event.authorization.roles` is empty in Actions, load roles with the **Manage
    - `read:users`
    - `read:roles`  
    (Required to call `GET /api/v2/users/{id}/roles`.)
+   - `assign:roles`  
+   (Required if you use the in-app **Admin → Users & roles** screen to assign or remove the five app roles via `POST`/`DELETE` `/api/v2/users/{id}/roles`.)
 
 3. Note the M2M **Client ID** and **Client Secret** and your Auth0 **tenant domain** (e.g. `dev-xxxx.us.auth0.com`).
+
+### Optional: same M2M for the API server (Users & roles UI)
+
+The SPA route **`/admin/users`** (admins only) calls the backend **`/api/admin/auth0/*`**, which uses the Management API with client credentials. On Railway (or your API host), set:
+
+- `AUTH0_MANAGEMENT_CLIENT_ID` — M2M application Client ID  
+- `AUTH0_MANAGEMENT_CLIENT_SECRET` — M2M Client Secret  
+
+`AUTH0_DOMAIN` must match the tenant used by the SPA. You can reuse the same M2M app you use in Actions (if you add `assign:roles`), or create a dedicated M2M app with `read:users`, `read:roles`, and `assign:roles` only.
 
 4. In each Action that uses the Management API, add **Secrets** (Auth0 Action editor → **Secrets**):
 
@@ -170,3 +181,4 @@ Use this pattern inside Actions (adjust imports to the `auth0` package version y
 - Server: `extractRoles` — `server/src/middleware/auth.ts`
 - Session endpoint used by the SPA: `GET /api/users/me/session` — `server/src/routes/users.ts`
 - Client: `useSessionRoles` — `client/src/hooks/useSessionRoles.ts`
+- Admin Auth0 directory UI: `GET/PUT /api/admin/auth0/...` — `server/src/routes/auth0Admin.ts`, `server/src/services/auth0Management.ts`; page `client/src/pages/AdminAuth0Users.tsx` (route `/admin/users`, `RoleRoute` with `admin` only)

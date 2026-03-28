@@ -147,6 +147,9 @@ export default function AdminDashboard(): JSX.Element {
           <Link to="/admin/activity" className="btn-jdp-secondary text-sm">
             Activity
           </Link>
+          <Link to="/admin/users" className="btn-jdp-secondary text-sm">
+            Users &amp; roles
+          </Link>
         </div>
       </div>
 

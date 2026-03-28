@@ -61,6 +61,12 @@ function Navbar(): JSX.Element {
                 >
                   QR
                 </Link>
+                <Link
+                  to="/admin/users"
+                  className="text-sm font-medium text-[var(--muted)] hover:text-[var(--text)]"
+                >
+                  Users
+                </Link>
               </>
             )}
             {isAuthenticated && (
