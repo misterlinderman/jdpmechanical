@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import api from '../services/api';
+import { useAuth0 } from '@auth0/auth0-react';
+import api, { setAuthToken } from '../services/api';
 import type { IUnit } from '../types/unit';
 import { useSessionRoles } from '../hooks/useSessionRoles';
 import StageTimeline, { type WorkerAction } from '../components/StageTimeline';
@@ -22,6 +23,7 @@ function ctaForAction(a: WorkerAction): { label: string; className: string } | n
 
 export default function ScanHandler(): JSX.Element {
   const { unitId } = useParams<{ unitId: string }>();
+  const { getAccessTokenSilently } = useAuth0();
   const { roles, loading: rolesLoading } = useSessionRoles();
   const [unit, setUnit] = useState<IUnit | null>(null);
   const [loading, setLoading] = useState(true);
@@ -37,6 +39,8 @@ export default function ScanHandler(): JSX.Element {
     setLoading(true);
     setError(null);
     try {
+      const token = await getAccessTokenSilently();
+      setAuthToken(token);
       const res = await api.get<{ success: boolean; data: IUnit }>(`/units/${unitId}`);
       setUnit(res.data.data);
     } catch {
@@ -45,7 +49,7 @@ export default function ScanHandler(): JSX.Element {
     } finally {
       setLoading(false);
     }
-  }, [unitId]);
+  }, [unitId, getAccessTokenSilently]);
 
   useEffect(() => {
     void load();
@@ -65,6 +69,8 @@ export default function ScanHandler(): JSX.Element {
     } as IUnit;
     setUnit(optimistic);
     try {
+      const token = await getAccessTokenSilently();
+      setAuthToken(token);
       const res = await api.post<{ success: boolean; unit?: IUnit; error?: string; code?: string }>(
         `/scan/${unitId}`
       );
