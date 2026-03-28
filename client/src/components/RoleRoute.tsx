@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import Loading from './Loading';
 import { useSessionRoles } from '../hooks/useSessionRoles';
@@ -11,6 +12,7 @@ interface RoleRouteProps {
 
 export default function RoleRoute({ children, roles: allowed, fallback }: RoleRouteProps) {
   const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
+  const location = useLocation();
   const { roles, loading } = useSessionRoles();
 
   if (isLoading || loading) {
@@ -18,7 +20,7 @@ export default function RoleRoute({ children, roles: allowed, fallback }: RoleRo
   }
 
   if (!isAuthenticated) {
-    loginWithRedirect();
+    loginWithRedirect({ appState: { returnTo: `${location.pathname}${location.search}` } });
     return <Loading />;
   }
 
