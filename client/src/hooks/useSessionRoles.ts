@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import api from '../services/api';
+import api, { setAuthToken } from '../services/api';
 
 export function useSessionRoles(): {
   roles: string[];
@@ -23,7 +23,9 @@ export function useSessionRoles(): {
       return;
     }
     try {
-      await getAccessTokenSilently();
+      const token = await getAccessTokenSilently();
+      // Must set axios Authorization before this request; useApiAuth runs in parallel and can race (→ 400 no Bearer).
+      setAuthToken(token);
       const res = await api.get<{ success: boolean; data: { roles: string[] } }>('/users/me/session');
       setRoles(res.data.data?.roles ?? []);
     } catch {

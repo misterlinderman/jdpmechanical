@@ -21,6 +21,9 @@ import exportRoutes from './routes/export';
 import eventRoutes from './routes/events';
 
 const app = express();
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1);
+}
 const httpServer = createServer(app);
 const PORT = process.env.PORT || 3001;
 
