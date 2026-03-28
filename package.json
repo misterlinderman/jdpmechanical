@@ -14,7 +14,9 @@
     "install:all": "npm install && cd client && npm install && cd ../server && npm install",
     "lint": "cd client && npm run lint && cd ../server && npm run lint",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
-    "clean": "rm -rf client/dist server/dist client/node_modules server/node_modules node_modules"
+    "clean": "rm -rf client/dist server/dist client/node_modules server/node_modules node_modules",
+    "seed:demo": "cd server && npm run seed:demo",
+    "seed:purge-demo": "cd server && npm run seed:purge-demo"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",

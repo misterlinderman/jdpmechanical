@@ -1,5 +1,5 @@
 import { Router, Response } from 'express';
-import { checkJwt, AuthRequest, extractUserId } from '../middleware/auth';
+import { checkJwt, AuthRequest, extractUserId, extractRoles } from '../middleware/auth';
 import { asyncHandler, createError } from '../middleware/errorHandler';
 import { User } from '../models';
 
@@ -7,6 +7,24 @@ const router = Router();
 
 // All routes require authentication
 router.use(checkJwt);
+
+// GET /api/users/me/session — roles from JWT (for client routing)
+router.get(
+  '/me/session',
+  asyncHandler(async (req: AuthRequest, res: Response) => {
+    const auth0Id = extractUserId(req);
+    if (!auth0Id) {
+      throw createError('User ID not found in token', 401);
+    }
+    res.json({
+      success: true,
+      data: {
+        roles: extractRoles(req),
+        auth0Id,
+      },
+    });
+  })
+);
 
 // GET /api/users/me - Get current user profile
 router.get(

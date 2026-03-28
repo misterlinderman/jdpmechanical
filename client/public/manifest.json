@@ -1,0 +1,17 @@
+{
+  "name": "FPB Tracker",
+  "short_name": "FPB",
+  "description": "JDP Mechanical fabricated pump box tracking",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f1923",
+  "theme_color": "#0f1923",
+  "icons": [
+    {
+      "src": "/vite.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

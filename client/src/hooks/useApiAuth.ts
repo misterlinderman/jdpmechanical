@@ -7,7 +7,7 @@ import api, { setAuthToken } from '../services/api';
  * Call this once in a high-level component to set up token handling
  */
 export function useApiAuth() {
-  const { isAuthenticated, getAccessTokenSilently } = useAuth0();
+  const { isAuthenticated, getAccessTokenSilently, user } = useAuth0();
 
   useEffect(() => {
     const setupToken = async () => {
@@ -15,6 +15,17 @@ export function useApiAuth() {
         try {
           const token = await getAccessTokenSilently();
           setAuthToken(token);
+          if (user?.email && user.name) {
+            try {
+              await api.put('/users/me', {
+                email: user.email,
+                name: user.name,
+                picture: user.picture,
+              });
+            } catch {
+              // Profile sync is best-effort; scan flow can still create the user
+            }
+          }
         } catch (error) {
           console.error('Error getting access token:', error);
           setAuthToken(null);
@@ -25,7 +36,7 @@ export function useApiAuth() {
     };
 
     setupToken();
-  }, [isAuthenticated, getAccessTokenSilently]);
+  }, [isAuthenticated, getAccessTokenSilently, user]);
 
   return api;
 }

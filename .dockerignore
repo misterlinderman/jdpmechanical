@@ -1,0 +1,9 @@
+node_modules/
+client/
+.env
+.env.*
+dist/
+context/screenshots/
+.git
+*.md
+.DS_Store

@@ -37,8 +37,10 @@ export const errorHandler = (
     });
   }
 
-  // Send response
+  // Send response (FPB API shape + legacy status/message)
   res.status(statusCode).json({
+    success: false,
+    error: err.message,
     status,
     message: err.message,
     ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
